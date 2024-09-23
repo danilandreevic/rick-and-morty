@@ -1,10 +1,9 @@
-import {Rick} from './components/Rick'
+import MainContainer from "./components/containers/MainContainer.jsx";
 
 function App() {
-
     return (
         <>
-            <Rick/>
+    <MainContainer />
         </>
     )
 }
