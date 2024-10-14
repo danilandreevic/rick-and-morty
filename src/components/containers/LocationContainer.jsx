@@ -1,22 +1,39 @@
 import { useEffect, useState } from "react";
-import { fetchLocation } from "../../api.js";
+import { fetchLocation, fetchCharacter } from "../../api.js";
 import LocationList from "../presentational/LocationList.jsx";
 
-const LocationContainer = () => {
-    const [location, setLocation] = useState([]);
+const LocationContainer = ({ searchTerm }) => {
+    const [locations, setLocations] = useState([]);
+    const [characters, setCharacters] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchLocation();
-            console.log(data)
-            setLocation(data || []);
-        };
-        fetchData();
+        setIsLoading(true);
+        fetchLocation().then(locationData => {
+            setLocations(locationData);
+            const characterIds = locationData.flatMap(location =>
+                location.residents.map(url => url.split('/').pop())
+            );
+            return fetchCharacter(characterIds);
+        }).then(characterData => {
+            setCharacters(characterData);
+            setIsLoading(false);
+        });
     }, []);
+
+    const filteredLocations = locations.filter(location => {
+        const locationMatch = location.name.toLowerCase().includes(searchTerm.toLowerCase());
+        const characterMatch = location.residents.some(url => {
+            const characterId = url.split('/').pop();
+            const character = characters.find(char => char.id === parseInt(characterId));
+            return character && character.name.toLowerCase().includes(searchTerm.toLowerCase());
+        });
+        return locationMatch || characterMatch;
+    });
 
     return (
         <div>
-            <LocationList location={location} />
+            <LocationList locations={filteredLocations} isLoading={isLoading} />
         </div>
     );
 };

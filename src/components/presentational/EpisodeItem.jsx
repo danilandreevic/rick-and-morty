@@ -1,13 +1,15 @@
-import {useState} from "react";
+import { useState } from "react";
 import CharactersContainer from "../containers/CharactersContainer.jsx";
 
-
-const EpisodeItem = ({episode}) => {
+const EpisodeItem = ({ episode }) => {
     const [open, setOpen] = useState(false);
+
+    const characterIds = episode.characters.map((url) => parseInt(url.split('/').pop(), 10));
+
     return (
-        <div className="episode" onClick={() => setOpen(true)}>
-        <h3>{episode.episode + ":" + episode.name}</h3>
-            {open && <CharactersContainer ids={episode.characters.map((url) => url.split('/').pop())}/>}
+        <div className="episode" onClick={() => setOpen(!open)}>
+            <h3>{episode.episode + ": " + episode.name}</h3>
+            {open && <CharactersContainer ids={characterIds} />}
         </div>
     );
 };

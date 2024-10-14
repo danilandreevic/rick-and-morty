@@ -1,13 +1,18 @@
-import LocationItem from "./LocationItem.jsx";
+import PropTypes from 'prop-types';
+import LocationItem from './LocationItem.jsx';
 
-const LocationList = ({location}) => {
+const LocationList = ({ locations }) => {
     return (
         <div>
-            {location.map((loc) => (
-                <LocationItem key={loc.id} loc={loc}/>
+            {locations.map(loc => (
+                <LocationItem key={loc.id} loc={loc} />
             ))}
         </div>
     );
+};
+
+LocationList.propTypes = {
+    locations: PropTypes.arrayOf(PropTypes.object).isRequired
 };
 
 export default LocationList;

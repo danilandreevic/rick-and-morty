@@ -1,20 +1,36 @@
 export const fetchEpisode = async () => {
-   return fetch ('https://rickandmortyapi.com/api/episode')
-       .then (response => response.json ())
-       .then (data => data.results);
-}
+   try {
+      const response = await fetch('https://rickandmortyapi.com/api/episode');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      return data.results;
+   } catch (error) {
+      console.error('Fetch episode failed:', error);
+      throw error;
+   }
+};
 
-export const fetchCharacter = async (ids) => {
-   await sleep(1000)
-   return fetch (`https://rickandmortyapi.com/api/character/${ids.join(',')}`)
-       .then (response => response.json ())
-}
+export const fetchCharacter = async (ids = []) => {
+   try {
+      const idsString = ids.join(',');
+      const response = await fetch(`https://rickandmortyapi.com/api/character/${idsString}`);
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      return Array.isArray(data) ? data : [data];
+   } catch (error) {
+      console.error('Fetch character failed:', error);
+      throw error;
+   }
+};
 
 export const fetchLocation = async () => {
-   await sleep(1000)
-   return fetch (`https://rickandmortyapi.com/api/location/`)
-       .then (response => response.json ())
-       .then (data => data.results);
-}
-
-const sleep = (ms) => new Promise ((resolve) => setTimeout (resolve, ms));
+   try {
+      const response = await fetch('https://rickandmortyapi.com/api/location/');
+      if (!response.ok) throw new Error('Network response was not ok');
+      const data = await response.json();
+      return data.results;
+   } catch (error) {
+      console.error('Fetch location failed:', error);
+      throw error;
+   }
+};
